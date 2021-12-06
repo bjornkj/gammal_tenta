@@ -3,15 +3,11 @@ Instruktioner
 
 Provet pågår 10.30-12.30 måndagen 30e november 2020.
 
- 1. Klona detta repo:
+ 1. Klona detta repo till ditt konto
 
-    github.com/KYHlings/kodprov
+ 2. Checka ut på din dator och arbeta där
 
- 2. Kopiera filen "main.py" som ligger i kodprov/ till erat kyh quizz repo,
-    alltså det privata repot som ni gjort inlämningar i.
-    Lägg "main.py" i en mapp kallad "kodprov/" i erat repo.
-
- 3. Inlämning sker genom att pusha erat kyh quizz repo så jag kan rätta.
+ 3. Inlämning sker genom att pusha erat repo så jag kan rätta.
 
  4. Det är OK att committa och pusha många gånger; det uppmuntras så ni kan
     jobba i små steg och göra "super undo" om ni traskar fel! :)
