@@ -1,5 +1,5 @@
-import requests
 from datetime import datetime
+from pa_api import download_course_data, get_all_trainers
 
 MENU_TEXT = """
 ---> MENU <---
@@ -11,17 +11,19 @@ Q) Quit
 """
 
 
-# TODO flytta api-relaterat till en egen modul
-def download_course_data():
-    print("Downloading all future course data... ", end='')
-    results = requests.get("https://proagile.se/api/publicEvents")
-    result_as_json = results.json()
-    print("Done.")
-    return result_as_json
-
-
 def course_start_date(course):
     return datetime.fromtimestamp(course['segments'][0]['start'])
+
+
+def get_trainer_id_with_most_courses(all_courses) -> int:
+    trainers = {}  # trainerId : antal_kurser
+    for course in all_courses:
+        if 'trainerId' in course:
+            if course['trainerId'] in trainers:
+                trainers[course['trainerId']] += 1
+            else:
+                trainers[course['trainerId']] = 1
+    return max(trainers, key=trainers.get)
 
 
 def run():
@@ -34,28 +36,40 @@ def run():
         if menu_choice == '2':
             list_next_five(all_courses)
         if menu_choice == '3':
-            # (10 p): Allow user entering only part of name.
-            # E.g. if the user enters "fredrik", all courses
-            # held by "Fredrik Wendt" will be listed.
-            trainer_name = input("Name of trainer:")
-            print(f"These courses are held by {trainer_name}:")
-            trainers_courses = [course for course in all_courses
-                                if trainer_name.lower() in course['trainerName'].lower()]
-            for num, course in enumerate(trainers_courses):
-                print(f"{num}. {course['courseName']} ({course_start_date(course)})")
+            list_courser_for_trainer(all_courses)
         if menu_choice == '4':
-            # TODO (10 p): Print the name of the trainer who
-            # holds most courses in the future.
-            # TODO (15 p): Also print out the phone number
-            # of that trainer.
-            # Note: The trainer is an employee of ProAgile,
-            # and public data about employees are available
-            # from this API endpoint:
-            #    https://proagile.se/api/publicEmployees
-            print('fix me')
+            print_top_trainer(all_courses)
         if menu_choice.upper() == 'Q':
             print("Good-bye and thank you for the fish!")
             return
+
+
+def print_top_trainer(all_courses):
+    top_trainer = get_trainer_id_with_most_courses(all_courses)
+    # print(f"trainer id of trainer with most courses {top_trainer}")
+    #  (10 p): Print the name of the trainer who
+    #  (15 p): Also print out the phone
+    trainers = get_all_trainers()
+    for trainer in trainers:
+        if trainer['id'] == top_trainer:
+            print(f"{trainer['name']} ({trainer['phone']})")
+    # of that trainer.
+    # Note: The trainer is an employee of ProAgile,
+    # and public data about employees are available
+    # from this API endpoint:
+    #    https://proagile.se/api/publicEmployees
+
+
+def list_courser_for_trainer(all_courses):
+    # (10 p): Allow user entering only part of name.
+    # E.g. if the user enters "fredrik", all courses
+    # held by "Fredrik Wendt" will be listed.
+    trainer_name = input("Name of trainer:")
+    print(f"These courses are held by {trainer_name}:")
+    trainers_courses = [course for course in all_courses
+                        if trainer_name.lower() in course['trainerName'].lower()]
+    for num, course in enumerate(trainers_courses):
+        print(f"{num}. {course['courseName']} ({course_start_date(course)})")
 
 
 def list_trainers(course_data):
