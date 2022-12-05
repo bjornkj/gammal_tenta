@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 
 # TODO flytta api-relaterat till en egen modul
 def download_course_data():
@@ -7,6 +8,10 @@ def download_course_data():
     result_as_json = results.json()
     print("Done.")
     return result_as_json
+
+
+def course_start_date(course):
+    return datetime.fromtimestamp(course['segments'][0]['start'])
 
 
 def run():
@@ -26,15 +31,15 @@ Q) Quit
         if menu_choice == '2':
             list_next_five(all_courses)
         if menu_choice == '3':
-            # TODO (10 p): Allow user entering only part of name.
+            # (10 p): Allow user entering only part of name.
             # E.g. if the user enters "fredrik", all courses
             # held by "Fredrik Wendt" will be listed.
             trainer_name = input("Name of trainer:")
             print(f"These courses are held by {trainer_name}:")
             trainers_courses = [course for course in all_courses
-                                if course['trainerName'] == trainer_name]
+                                if trainer_name.lower() in course['trainerName'].lower()]
             for num, course in enumerate(trainers_courses):
-                print(f"{num}. {course['courseName']} ({course['startDate']})")
+                print(f"{num}. {course['courseName']} ({course_start_date(course)})")
         if menu_choice == '4':
             # TODO (10 p): Print the name of the trainer who
             # holds most courses in the future.
