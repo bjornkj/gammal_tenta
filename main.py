@@ -1,6 +1,16 @@
 import requests
 from datetime import datetime
 
+MENU_TEXT = """
+---> MENU <---
+1) List all trainers sorted by name
+2) List 5 next upcoming courses sorted by date
+3) List all courses with a specific trainer
+4) List telephone number of most popular trainer
+Q) Quit
+"""
+
+
 # TODO flytta api-relaterat till en egen modul
 def download_course_data():
     print("Downloading all future course data... ", end='')
@@ -17,14 +27,7 @@ def course_start_date(course):
 def run():
     all_courses = download_course_data()
     while True:
-        print("""
----> MENU <---
-1) List all trainers sorted by name
-2) List 5 next upcoming courses sorted by date
-3) List all courses with a specific trainer
-4) List telephone number of most popular trainer
-Q) Quit
-""")
+        print(MENU_TEXT)
         menu_choice = input("What say you? ").upper().strip()
         if menu_choice == '1':
             list_trainers(all_courses)
@@ -56,7 +59,7 @@ Q) Quit
 
 
 def list_trainers(course_data):
-    # TODO (5 p):
+    # (5 p):
     # Sort the trainers before printing them.
     print("The trainers at ProAgile are:")
     trainers = []
@@ -64,7 +67,7 @@ def list_trainers(course_data):
         trainer = course['trainerName']
         if trainer not in trainers:
             trainers.append(trainer)
-    for trainer in trainers:
+    for trainer in sorted(trainers):
         print(f'  {trainer}')
 
 
