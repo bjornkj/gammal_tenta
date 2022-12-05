@@ -72,20 +72,20 @@ def list_trainers(course_data):
 
 
 def list_next_five(course_data):
-    # TODO (10p):
+    # (10p):
     # 1. First column is always 2 column wide
     # 2. Second column is always 50 columns wide
     # 3. Third column is as small as possible
-    # TODO (5p):
+    # (5p):
     #  - We want next 5, not all courses printed
-    # TODO (5p):
+    # (5p):
     #  - We want the sorted on startDate, not name
-    # TODO (5p):
+    # (5p):
     #  - We want the output numbered from 1, not 0
     print("Next 5 courses sorted by date:")
-    course_data = sorted(course_data, key=lambda c: c['name'])
-    for num, course in enumerate(course_data):
-        print(f"{num}. {course['courseName']} ({course['startDate']})")
+    course_data = sorted(course_data, key=lambda c: course_start_date(c))
+    for num, course in enumerate(course_data[:5], start=1):
+        print(f"{num}. {course['courseName'] : <50} ({course_start_date(course)})")
 
 
 if __name__ == '__main__':
